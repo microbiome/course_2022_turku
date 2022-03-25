@@ -6,8 +6,8 @@
   oneside]{book}
 \usepackage{amsmath,amssymb}
 \usepackage{lmodern}
-\usepackage{ifxetex,ifluatex}
-\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+\usepackage{iftex}
+\ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
@@ -124,7 +124,7 @@
 \usepackage[normalem]{ulem}
 \usepackage{makecell}
 \usepackage{xcolor}
-\ifluatex
+\ifLuaTeX
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
 \usepackage[]{natbib}
@@ -132,7 +132,7 @@
 
 \title{Introduction to microbiome data science}
 \author{University of Turku}
-\date{2021-08-12}
+\date{2022-03-25}
 
 \begin{document}
 \maketitle
@@ -223,6 +223,8 @@ although this is not necessary for the training.
 
 \hypertarget{program}{%
 \chapter{Program}\label{program}}
+
+(Testing if everything works, remove this\ldots)
 
 The course takes place on each working day from 9am -- 1pm
 (CEST). Short breaks will be scheduled between sessions.
@@ -723,6 +725,10 @@ research} F1000Research 9:1464 (slides).
 ## The following object is masked from 'package:base':
 ## 
 ##     strsplit
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: MultiAssayExperiment
 \end{verbatim}
 
 \begin{verbatim}
@@ -1357,6 +1363,10 @@ import the data and generate the analyses.
 \end{verbatim}
 
 \begin{verbatim}
+## Loading required package: MultiAssayExperiment
+\end{verbatim}
+
+\begin{verbatim}
 ## Loading required package: ggplot2
 \end{verbatim}
 
@@ -1807,6 +1817,10 @@ Add the following in the reproducible summary report.
 \end{verbatim}
 
 \begin{verbatim}
+## Loading required package: MultiAssayExperiment
+\end{verbatim}
+
+\begin{verbatim}
 ## Loading required package: ggplot2
 \end{verbatim}
 
@@ -2010,27 +2024,54 @@ the points accordingly.
 \hypertarget{pcoa-plot-with-continuous-variable}{%
 \subsection{PCoA plot with continuous variable}\label{pcoa-plot-with-continuous-variable}}
 
-We can do the same as above using any continuous variable. E.g. let us
-see how the plotted samples differ in their alpha diversity (as an
-example of a continuous variable):
+We can also overlay a continuous variable on a PCoA plot. E.g. let us
+use the alcohol study dataset from \href{https://bioconductor.org/packages/release/data/experiment/vignettes/curatedMetagenomicData/inst/doc/curatedMetagenomicData.html}{curatedMetagenomicData}.
+Perform PCoA and use the BMI as our continuous variable:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{\# Adds coloring information to the data frame, creates new column}
-\NormalTok{euclidean\_shannon\_pcoa\_df }\OtherTok{\textless{}{-}} \FunctionTok{cbind}\NormalTok{(euclidean\_pcoa\_df,}
-                             \AttributeTok{shannon =} \FunctionTok{colData}\NormalTok{(tse)}\SpecialCharTok{$}\NormalTok{Shannon\_diversity)}
+\CommentTok{\# Retrieving data as a TreeSummarizedExperiment object, and agglomerating to a genus level.}
+\FunctionTok{library}\NormalTok{(curatedMetagenomicData)}
+\FunctionTok{library}\NormalTok{(dplyr)}
+\FunctionTok{library}\NormalTok{(DT)}
+\CommentTok{\# Querying the data}
+\NormalTok{tse\_data }\OtherTok{\textless{}{-}}\NormalTok{ sampleMetadata }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{filter}\NormalTok{(age }\SpecialCharTok{\textgreater{}=} \DecValTok{18}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\# taking only data of age 18 or above}
+    \FunctionTok{filter}\NormalTok{(}\SpecialCharTok{!}\FunctionTok{is.na}\NormalTok{(alcohol)) }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\# excluding missing values}
+    \FunctionTok{returnSamples}\NormalTok{(}\StringTok{"relative\_abundance"}\NormalTok{)}
 
-\CommentTok{\# Creates a plot}
-\NormalTok{euclidean\_shannon\_plot }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ euclidean\_shannon\_pcoa\_df, }
-                                 \FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{pcoa1, }\AttributeTok{y=}\NormalTok{pcoa2,}
-                                     \AttributeTok{color =}\NormalTok{ shannon)) }\SpecialCharTok{+} 
-  \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+}
-  \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \StringTok{"PC1"}\NormalTok{,}
-       \AttributeTok{y =} \StringTok{"PC2"}\NormalTok{,}
-       \AttributeTok{title =} \StringTok{"PCoA with Aitchison distances"}\NormalTok{) }\SpecialCharTok{+}
-  \FunctionTok{theme}\NormalTok{(}\AttributeTok{title =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size =} \DecValTok{12}\NormalTok{)) }\CommentTok{\# makes titles smaller}
+\CommentTok{\# Agglomeration}
+\NormalTok{tse\_genus }\OtherTok{\textless{}{-}} \FunctionTok{agglomerateByRank}\NormalTok{(tse\_data, }\AttributeTok{rank=}\StringTok{"genus"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
 
-\NormalTok{euclidean\_shannon\_plot}
+Performing PCoA with Bray-Curtis dissimilarity.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(scater)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Loading required package: scuttle
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tse\_genus }\OtherTok{\textless{}{-}} \FunctionTok{runMDS}\NormalTok{(tse\_genus, }\AttributeTok{FUN =}\NormalTok{ vegan}\SpecialCharTok{::}\NormalTok{vegdist,}
+              \AttributeTok{name =} \StringTok{"PCoA\_BC"}\NormalTok{, }\AttributeTok{exprs\_values =} \StringTok{"relative\_abundance"}\NormalTok{)}
+
+\CommentTok{\# Retrieving the explained variance}
+\NormalTok{e }\OtherTok{\textless{}{-}} \FunctionTok{attr}\NormalTok{(}\FunctionTok{reducedDim}\NormalTok{(tse\_genus, }\StringTok{"PCoA\_BC"}\NormalTok{), }\StringTok{"eig"}\NormalTok{);}
+\NormalTok{var\_explained }\OtherTok{\textless{}{-}}\NormalTok{ e}\SpecialCharTok{/}\FunctionTok{sum}\NormalTok{(e[e}\SpecialCharTok{\textgreater{}}\DecValTok{0}\NormalTok{])}\SpecialCharTok{*}\DecValTok{100}
+
+\CommentTok{\# Visualization}
+\NormalTok{plot }\OtherTok{\textless{}{-}}\FunctionTok{plotReducedDim}\NormalTok{(tse\_genus,}\StringTok{"PCoA\_BC"}\NormalTok{, }\AttributeTok{colour\_by =} \StringTok{"BMI"}\NormalTok{)}\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{x=}\FunctionTok{paste}\NormalTok{(}\StringTok{"PC1 ("}\NormalTok{,}\FunctionTok{round}\NormalTok{(var\_explained[}\DecValTok{1}\NormalTok{],}\DecValTok{1}\NormalTok{),}\StringTok{"\%)"}\NormalTok{),}
+       \AttributeTok{y=}\FunctionTok{paste}\NormalTok{(}\StringTok{"PC2 ("}\NormalTok{,}\FunctionTok{round}\NormalTok{(var\_explained[}\DecValTok{2}\NormalTok{],}\DecValTok{1}\NormalTok{),}\StringTok{"\%)"}\NormalTok{),}
+       \AttributeTok{color=}\StringTok{""}\NormalTok{)}
+\NormalTok{plot}
 \end{Highlighting}
 \end{Shaded}
 
@@ -2071,7 +2112,7 @@ variables are associated with each other.
 \end{Shaded}
 
 \begin{verbatim}
-## [1] "Different different cohorts and variance of abundance between samples, p-value: 0.7439"
+## [1] "Different different cohorts and variance of abundance between samples, p-value: 0.7378"
 \end{verbatim}
 
 The cohort variable is not significantly associated with
@@ -2120,7 +2161,7 @@ names. We can fetch those from our rowData. Here we use Genus level names:
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{07-beta_files/figure-latex/unnamed-chunk-2-1.pdf}
+\includegraphics{07-beta_files/figure-latex/unnamed-chunk-4-1.pdf}
 
 There are many alternative and complementary methods for analysing
 community composition. For more examples, see a dedicated section on
@@ -2138,7 +2179,7 @@ A dedicated section presenting examples on community typing is in the
 
 \begin{itemize}
 \item
-  Visualize community variation with different methods (PCA, MDS, t-SNE\ldots) by using the options in the alternative method, plotReducedDim \href{https://microbiome.github.io/OMA/microbiome-diversity.html\#estimating-beta-diversity}{OMA}. Compare results obtained with different dissimilarities (Euclidean, Bray-Curtis, Unifrac..) and transformations (CLR, compositional..) of your own choice."
+  Visualize community variation with different methods (PCA, MDS, t-SNE\ldots) by using the options in the alternative method, plotReducedDim \href{https://microbiome.github.io/OMA/microbiome-diversity.html\#estimating-beta-diversity}{OMA}. Compare results obtained with different dissimilarities (Euclidean, Bray-Curtis, Unifrac..) and transformations (CLR, compositional..) of your own choice.''
 \item
   Investigate the influence of the data transformations on
   statistical analysis: Visualize community variation with PCoA with
@@ -2304,6 +2345,10 @@ A dedicated section presenting examples on community typing is in the
 ## The following object is masked from 'package:base':
 ## 
 ##     strsplit
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: MultiAssayExperiment
 \end{verbatim}
 
 \begin{verbatim}
@@ -2937,7 +2982,7 @@ Then we can plot these six different taxa. Let's arrange them into the same pict
 
 \includegraphics{08-abundance_files/figure-latex/unnamed-chunk-14-1.pdf}
 
-We plotted those taxa that have the highest and lowest p values according to DESeq2. Can you create a plot that shows the difference in abundance in "{[}Ruminococcus{]}\_gauvreauii\_group", which is the other taxon that was identified by all tools. Try for yourself! Below you find one way how to do it.
+We plotted those taxa that have the highest and lowest p values according to DESeq2. Can you create a plot that shows the difference in abundance in ``{[}Ruminococcus{]}\_gauvreauii\_group'', which is the other taxon that was identified by all tools. Try for yourself! Below you find one way how to do it.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -3207,6 +3252,10 @@ RStudio
 ## The following object is masked from 'package:base':
 ## 
 ##     strsplit
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: MultiAssayExperiment
 \end{verbatim}
 
 \begin{verbatim}
