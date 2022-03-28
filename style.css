@@ -13,5 +13,5 @@ pre code {
   white-space: inherit;
 }
 body {
-    background-color: #b6dde9;
+    background-color: #b6dde9 !important;
 }
