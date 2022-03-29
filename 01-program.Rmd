@@ -2,6 +2,7 @@
 # Program
 
 (Testing if everything works, remove this...) 
+Test
 
 The course takes place on each working day from 9am – 1pm
 (CEST). Short breaks will be scheduled between sessions.
