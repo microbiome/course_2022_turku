@@ -444,7 +444,7 @@ print(paste0("Different different cohorts and variance of abundance ",
 ```
 
 ```
-## [1] "Different different cohorts and variance of abundance between samples, p-value: 0.7446"
+## [1] "Different different cohorts and variance of abundance between samples, p-value: 0.7435"
 ```
 
 The cohort variable is not significantly associated with
