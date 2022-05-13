@@ -1,0 +1,111 @@
+```{r, echo=FALSE}
+library(mia)
+library(miaViz)
+library(dplyr)
+se <- readRDS("data/se.rds")
+tse <- readRDS("data/tse.rds")
+```
+
+
+
+# Alpha diversity
+
+This section demonstrates the analysis of alpha diversity. This
+quantity measures microbial diversity within each sample. 
+
+Alpha diversity is a key quantity in a microbiome research. The [_mia_
+package](https://microbiome.github.io/mia/) provides access to a wide
+variety of alpha diversity indices. For more background information
+and examples with various alpha diversity indices, see the [online
+book](https://microbiome.github.io/OMA/microbiome-diversity.html#alpha-diversity).
+
+There are different alpha diversity implementations that relate to:
+ - unit level: general, species or ASVs? prehaps genes?
+ - unit detection: precence / absence or abundances, weighing of rare units
+ - is phylogenic information incorporated, i.e. how well the sample covers the phylogenetic tree?`
+
+Popular framework to capture the different aspects of alpha diversity is [**Hill numbers**](https://doi.org/10.1111/1755-0998.13014)
+
+Higher numbers of unique taxa, and more even abundance distributions within a
+sample yield larger values for alpha diversity.
+
+ - richness depicts the number of units / species in sample and is intuitive
+ - Shannon Index accounts also for the evenness
+ - Simpson Index weighs the abundant or dominating units more than Shannon Index
+
+
+
+```{r}
+# Calculates indices
+tse <- estimateDiversity(tse, index = "shannon", name = names)
+
+```
+
+Next we can visualize Shannon index with histogram.
+
+```{r}
+# ggplot needs data.frame format as input.
+# Here, colData is DataFrame, therefore it needs to be converted to data.frame
+shannon_hist <- ggplot(as.data.frame(colData(tse)), 
+                       aes(x = shannon)) + 
+  geom_histogram(bins = 20, fill = "gray", color = "black") +
+  labs(x = "Shannon index", y = "Sample frequency")
+
+shannon_hist
+```
+
+
+## Visualization
+
+Next let us compare indices between different patient status and
+cohorts. Boxplot is suitable for that purpose.
+
+```{r}
+# Creates Shannon boxplot 
+shannon_box <- ggplot(as.data.frame(colData(tse)),
+  aes(x = patient_status, 
+      y = Shannon_diversity,
+      fill = cohort)) + 
+  geom_boxplot() +
+  theme(title = element_text(size = 12)) # makes titles smaller
+
+```
+
+For an alternative visualization, see examples with [scater::plotColData](https://microbiome.github.io/OMA/microbiome-diversity.html#alpha-diversity).
+
+
+## Statistical testing and comparisons
+
+To further investigate if patient status could explain the variation
+of Shannon index, let's do a Wilcoxon test. This is a non-parametric
+test that doesn't make specific assumptions about the distribution,
+unlike popular parametric tests, such as the t test, which assumes
+normally distributed observations.
+
+Wilcoxon test can be used to estimate whether the differences between
+two groups is statistically significant. 
+
+
+```{r}
+# Wilcoxon test, where Shannon index is the variable that we are comparing. 
+# Patient status - ADHD or control - is the factor that we use for grouping. 
+wilcoxon_shannon <- wilcox.test(Shannon_diversity ~ patient_status, data = colData(tse))
+
+wilcoxon_shannon
+```
+
+For more examples, see a dedicated section on alpha diversity in the
+[online book](https://microbiome.github.io/OMA/microbiome-diversity.html#alpha-diversity).
+
+## Exercises
+
+Add the following in the reproducible summary report.
+
+* Estimate alpha diversity for each sample and draw a histogram. Tip:
+  estimateDiversity
+
+* Compare the results between two or more
+  alpha diversity indices (visually and/or statistically).
+
+* See [online book](https://microbiome.github.io/OMA/microbiome-diversity.html#alpha-diversity) 
+for further examples.

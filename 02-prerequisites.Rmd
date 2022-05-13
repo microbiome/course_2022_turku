@@ -1,0 +1,97 @@
+
+#  Prerequisites
+
+The general tools you'll need in the course:
+* R, i.e. the program
+* Rstudio, i.e. the nice graphical interface that makes things easier
+* tidyverse: the collection of packages that make the data cleaning, wrangling and analysis smoother
+* ggplot2: visualization package by the tidyverse main developer
+* BioConductor, i.e. the place where most of the bioinformatics tools live
+
+
+It's easier during the course if you have a general understanding of the inner works of R, tidyverse and ggplot2. There are great openly available materials that introduce the topic, and I highly recommend watching at least these:
+
+1. Videos 2-5, 8-14 from [Marin Stats Lectures](https://www.youtube.com/playlist?list=PLqzoL9-eJTNARFXxgwbqGo56NtbJnB37A)
+* While you are watching the videos:
++ Install R and RStudio
++ Download an example data that I'll send you
++ Calculate a correlation between two numeric variables
+
+You can use other materials in the internet, and effective use of search engines is the key for problem solving. For example, [STHDA](http://www.sthda.com) and [Stack Overflow](https://stackoverflow.com) are valuable resources.
+
+2. Understand the basic anatomy of the general data science tools: [tidyverse](https://www.youtube.com/watch?v=nRtp7wSEtJA) (starting from 1:33) and [ggplot2](https://www.youtube.com/watch?v=FdVy57oGJuc) (starting from 0:52)
+* Visualize the relationship between two numeric variables
+* Generate similar plots separately for males and females
+
+3. Install the specialist tools:
+* [Bioconductor](https://www.bioconductor.org/install/), [video instruction](https://www.youtube.com/watch?v=18FyH5pKkuM)
+* The stable version of [mia package](https://microbiome.github.io/OMA/packages.html)
+
+**Do not hesitate to ask for support.**
+
+> Congrats, now you have successfully laid the base for any data analysis projects!
+
+
+**If you want to read more** I recommend the following:
+* (Data science basics in R](https://r4ds.had.co.nz)
+* (Modern Statistics for Modern Biology)[https://www.huber.embl.de/msmb/] open access book by Susan P. Holmes and Wolfgang Huber
+
+
+## Support and resources
+
+For additional reading and online material, see [Material](material.html) section
+
+For online support on installation and other matters, you can join us at:
+
+ * Users: [miaverse Gitter channel](https://gitter.im/microbiome/miaverse?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+ * Local: Slack channel
+
+
+
+## Installing and loading the required R packages
+
+This section shows how to install and load all required packages into
+the R session. Only uninstalled packages are installed.
+
+```{r warning = FALSE, message = FALSE}
+# List of packages that we need from cran and bioc 
+cran_pkg <- c("BiocManager", "bookdown", "dplyr", "ecodist", "ggplot2", 
+              "gridExtra", "kableExtra", "knitr", "scales", "vegan")
+bioc_pkg <- c("ANCOMBC", "ape", "DESeq2",  "DirichletMultinomial", "mia", "miaViz")
+
+# Gets those packages that are already installed
+cran_pkg_already_installed <- cran_pkg[ cran_pkg %in% installed.packages() ]
+bioc_pkg_already_installed <- bioc_pkg[ bioc_pkg %in% installed.packages() ]
+
+# Gets those packages that need to be installed
+cran_pkg_to_be_installed <- setdiff(cran_pkg, cran_pkg_already_installed)
+bioc_pkg_to_be_installed <- setdiff(bioc_pkg, bioc_pkg_already_installed)
+```
+
+```{r warning = FALSE, message = FALSE}
+# If there are packages that need to be installed, installs them from CRAN
+if( length(cran_pkg_to_be_installed) ) {
+   install.packages(cran_pkg_to_be_installed)
+}
+```
+
+```{r warning = FALSE, message = FALSE}
+# If there are packages that need to be installed, installs them from Bioconductor
+if( length(bioc_pkg_to_be_installed) ) {
+   BiocManager::install(bioc_pkg_to_be_installed, ask = F)
+}
+```
+ 
+Now all required packages are installed, so let's load them into the session.
+Some function names occur in multiple packages. That is why miaverse's packages
+mia and miaViz are prioritized. Packages that are loaded first have higher priority.
+
+```{r warning = FALSE, message = FALSE}
+# Reorders bioc packages, so that mia and miaViz are first
+bioc_pkg <- c(bioc_pkg[ bioc_pkg %in% c("mia", "miaViz") ], 
+              bioc_pkg[ !bioc_pkg %in% c("mia", "miaViz") ] ) 
+
+# Loading all packages into session. Returns true if package was successfully loaded.
+loaded <- sapply(c(bioc_pkg, cran_pkg), require, character.only = TRUE)
+as.data.frame(loaded)
+```
