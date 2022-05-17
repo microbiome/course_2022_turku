@@ -29,6 +29,7 @@ on:
       - main
 
 name: build-book-release
+run: git config --global --add safe.directory /__w/course_2022_turku/course_2022_turku
 
 ## These environment variables control whether to run GHA code later on that is
 ## specific to testthat, covr, and pkgdown.
