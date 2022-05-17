@@ -1,4 +1,4 @@
-book_filename: radboud2021_material
+book_filename: rotation2022_material
 pagetitle: "Microbiome Analysis with R/Bioconductor"
 delete_merged_file: true
 new_session: true
@@ -9,13 +9,9 @@ output_dir: docs
 rmd_files:
   - index.Rmd
   - 01-program.Rmd
-  - 02-start.Rmd
-  - 03-reproduciblereporting.Rmd
-  - 04-import.Rmd
-  - 05-explore.Rmd
-  - 06-alpha.Rmd
-  - 07-beta.Rmd
-  - 08-abundance.Rmd
-  - 09-material.Rmd
-  - 10-misc.Rmd
-  - 12-Solutions.Rmd
+  - 02-prerequisites.Rmd
+  - 03-import.Rmd
+  - 04-explore.Rmd
+  - 05-alpha.Rmd
+  - 06-beta.Rmd
+  - 07-differentialabundance.Rmd
