@@ -1,6 +1,6 @@
 # Introduction to microbiome data science 
 
-**Welcome to [Radboud Summer School, July 2021](https://www.ru.nl/radboudsummerschool/courses/2021/brain-bacteria-behaviour/)**
+**Welcome to POPC Microbiome Summer Rotation May - June 2022**
 
 <img src="https://user-images.githubusercontent.com/60338854/121848694-1072a480-ccf3-11eb-9af2-7fdefd8d1794.png" alt="ML4microbiome" width="50%"/>
 
@@ -45,10 +45,9 @@ research with R.
 After the course you will know how to approach new tasks in microbiome
 data science by utilizing available documentation and R tools.
 
-**Target audience** Advanced students and applied researchers who wish
-  to develop their skills in microbial community analysis.
+**Target audience** Medical students who wish to get familiar with microbiome research and data analysis..
 
-**Venue** [Radboud University / Online](), Nijmegen. July 5-16, 2021,
+**Venue** Centre for Population Health Research (POPC, UTU)
   with contributions by [University of
   Turku](http://datascience.utu.fi), Finland.
 
@@ -61,6 +60,8 @@ data science by utilizing available documentation and R tools.
 **Citation** "Introduction to miaverse (2021). Tuomas Borman, Henrik Eckermann, Chouaib Benchraka, Leo Lahti. URL: https://microbiome.github.io".
 
 **Contact**
+
+- [Anna Aatsinki](https://www.utu.fi/en/people/anna-aatsinki), University of Turku
 - [Leo Lahti](http://datascience.utu.fi), University of Turku
 - [mia Collective](https://microbiome.github.io)
 
