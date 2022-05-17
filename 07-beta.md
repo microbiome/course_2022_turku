@@ -436,7 +436,13 @@ rel_abund_assay <- t(rel_abund_assay)
 permanova_cohort <- vegan::adonis(rel_abund_assay ~ cohort,
                                   data = colData(tse),
                                   permutations = 9999)
+```
 
+```
+## 'adonis' will be deprecated: use 'adonis2' instead
+```
+
+```r
 # we can obtain a the p value for our predictor:
 print(paste0("Different different cohorts and variance of abundance ",
               "between samples, p-value: ", 
@@ -444,7 +450,7 @@ print(paste0("Different different cohorts and variance of abundance ",
 ```
 
 ```
-## [1] "Different different cohorts and variance of abundance between samples, p-value: 0.7438"
+## [1] "Different different cohorts and variance of abundance between samples, p-value: 0.7397"
 ```
 
 The cohort variable is not significantly associated with

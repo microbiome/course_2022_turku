@@ -132,7 +132,7 @@
 
 \title{Introduction to microbiome data science}
 \author{University of Turku}
-\date{2022-03-29}
+\date{2022-05-17}
 
 \begin{document}
 \maketitle
@@ -2104,7 +2104,15 @@ variables are associated with each other.
 \NormalTok{permanova\_cohort }\OtherTok{\textless{}{-}}\NormalTok{ vegan}\SpecialCharTok{::}\FunctionTok{adonis}\NormalTok{(rel\_abund\_assay }\SpecialCharTok{\textasciitilde{}}\NormalTok{ cohort,}
                                   \AttributeTok{data =} \FunctionTok{colData}\NormalTok{(tse),}
                                   \AttributeTok{permutations =} \DecValTok{9999}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
 
+\begin{verbatim}
+## 'adonis' will be deprecated: use 'adonis2' instead
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
 \CommentTok{\# we can obtain a the p value for our predictor:}
 \FunctionTok{print}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"Different different cohorts and variance of abundance "}\NormalTok{,}
               \StringTok{"between samples, p{-}value: "}\NormalTok{, }
@@ -2113,7 +2121,7 @@ variables are associated with each other.
 \end{Shaded}
 
 \begin{verbatim}
-## [1] "Different different cohorts and variance of abundance between samples, p-value: 0.7438"
+## [1] "Different different cohorts and variance of abundance between samples, p-value: 0.7397"
 \end{verbatim}
 
 The cohort variable is not significantly associated with
@@ -2647,7 +2655,7 @@ Now let us show how to do this. First, run the DESeq2 analysis.
 \hline
   & baseMean & log2FoldChange & lfcSE & stat & pvalue & padj & taxon\\
 \hline
-Genus:Ruminococcaceae\_UCG-014 & 22.548297 & -24.891268 & 2.460684 & -10.115589 & 0.0000000 & 0.0000000 & Genus:Ruminococcaceae\_UCG-014\\
+Genus:Ruminococcaceae\_UCG-014 & 22.548297 & -24.891267 & 2.460684 & -10.115589 & 0.0000000 & 0.0000000 & Genus:Ruminococcaceae\_UCG-014\\
 \hline
 Order:Bacteroidales & 40.353733 & -9.241798 & 2.136205 & -4.326270 & 0.0000152 & 0.0002730 & Order:Bacteroidales\\
 \hline
